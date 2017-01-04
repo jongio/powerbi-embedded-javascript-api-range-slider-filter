@@ -1,0 +1,99 @@
+<html>
+
+<head>
+    <title>Power BI Embedded with Filtering Sample</title>
+    <link rel="stylesheet" href="./node_modules/jqueryui/jquery-ui.min.css">
+    <style>
+    #slider {
+        width: 500px;
+    }
+    #reportContainer {
+        height: 500px;
+    }
+    #custom-handle {
+        width: 1.6em;
+        height: 1.6em;
+        top: 50%;
+        margin-top: -.8em;
+        text-align: center;
+        line-height: 1.6em;
+    }
+    </style>
+</head>
+
+<body>
+
+    <div id="slider">
+        <div id="custom-handle" class="ui-slider-handle"></div>
+    </div>
+    <div id="reportContainer" />
+
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./node_modules/jqueryui/jquery-ui.min.js"></script>
+    <script src="./node_modules/powerbi-client/dist/powerbi.min.js"></script>
+
+    <script>
+
+        $(e => {
+            var handle = $("#custom-handle");
+            $("#slider").slider({
+                min: 1,
+                max: 25,
+                step: 1,
+                create: function () {
+                    handle.text($(this).slider("value"));
+                },
+                slide: function (event, ui) {
+                    handle.text(ui.value);
+                    filter([ui.value]);
+                }
+            });
+
+            (function () {
+                var embedToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjIuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlciBCSSBOb2RlIFNESyIsIndjbiI6InBiaWVqc3NhbXBsZSIsIndpZCI6ImQ2NmQ4ZTQyLWI5MmEtNDU3Ni05MDcyLWZiYWFmYjg3MmFlNyIsInJpZCI6IjQ5NjRhOTQ3LTg1N2YtNGMxNC05MTRkLWM2NmUxYzU3MTNjZCIsIm5iZiI6MTQ4MzQ4OTc4NCwiZXhwIjoxNDgzNDkzMzg0fQ.aiUpNxQ1YSRm9ifrPlixv_efuzm43RlsXv_Z37NQFx0';
+                var reportId = '4964a947-857f-4c14-914d-c66e1c5713cd';
+                var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=' + reportId;
+
+                var config = {
+                    type: 'report',
+                    accessToken: embedToken,
+                    embedUrl: embedUrl,
+                    id: reportId,
+                    settings: {
+                        filterPaneEnabled: false,
+                        navContentPaneEnabled: false
+                    }
+                };
+
+                powerbi.embed(document.getElementById('reportContainer'), config);
+
+            })();
+        });
+
+        function filter(values) {
+            const filter = {
+                $schema: "http://powerbi.com/product/schema#basic",
+                target: {
+                    table: "Data",
+                    column: "Value"
+                },
+                operator: "In",
+                values: values
+            };
+
+            var report = powerbi.embeds[0];
+            if (report) {
+                report.setFilters([filter])
+                    .then(function (result) {
+                        console.log(result);
+                    })
+                    .catch(function (errors) {
+                        console.log(errors);
+                    });
+            }
+        }
+
+    </script>
+</body>
+
+</html>
