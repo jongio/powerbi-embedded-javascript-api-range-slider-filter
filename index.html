@@ -1,3 +1,5 @@
+<!doctype html>
+
 <html>
 
 <head>
@@ -19,6 +21,7 @@
         line-height: 1.6em;
     }
     </style>
+
 </head>
 
 <body>
@@ -26,15 +29,17 @@
     <div id="slider">
         <div id="custom-handle" class="ui-slider-handle"></div>
     </div>
-    <div id="reportContainer" />
+
+    <div id="reportContainer"></div>
 
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
     <script src="./node_modules/jqueryui/jquery-ui.min.js"></script>
+    <script src="./node_modules/es6-promise/dist/es6-promise.auto.min.js"></script>
     <script src="./node_modules/powerbi-client/dist/powerbi.min.js"></script>
 
     <script>
 
-        $(e => {
+        $(function () {
             var handle = $("#custom-handle");
             $("#slider").slider({
                 min: 1,
@@ -50,7 +55,7 @@
             });
 
             (function () {
-                var embedToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjIuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlciBCSSBOb2RlIFNESyIsIndjbiI6InBiaWVqc3NhbXBsZSIsIndpZCI6ImQ2NmQ4ZTQyLWI5MmEtNDU3Ni05MDcyLWZiYWFmYjg3MmFlNyIsInJpZCI6IjQ5NjRhOTQ3LTg1N2YtNGMxNC05MTRkLWM2NmUxYzU3MTNjZCIsIm5iZiI6MTQ4MzQ4OTc4NCwiZXhwIjoxNDgzNDkzMzg0fQ.aiUpNxQ1YSRm9ifrPlixv_efuzm43RlsXv_Z37NQFx0';
+                var embedToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2ZXIiOiIwLjIuMCIsImF1ZCI6Imh0dHBzOi8vYW5hbHlzaXMud2luZG93cy5uZXQvcG93ZXJiaS9hcGkiLCJpc3MiOiJQb3dlciBCSSBOb2RlIFNESyIsIndjbiI6InBiaWVqc3NhbXBsZSIsIndpZCI6ImQ2NmQ4ZTQyLWI5MmEtNDU3Ni05MDcyLWZiYWFmYjg3MmFlNyIsInJpZCI6IjQ5NjRhOTQ3LTg1N2YtNGMxNC05MTRkLWM2NmUxYzU3MTNjZCIsIm5iZiI6MTQ4MzY2MTY4OSwiZXhwIjoxNDgzNjY1Mjg5fQ.-g6Zh5AthZDCfZLEtvnl7mXDMBYjwauZyBORer--xb0';
                 var reportId = '4964a947-857f-4c14-914d-c66e1c5713cd';
                 var embedUrl = 'https://embedded.powerbi.com/appTokenReportEmbed?reportId=' + reportId;
 
@@ -65,7 +70,7 @@
                     }
                 };
 
-                powerbi.embed(document.getElementById('reportContainer'), config);
+                powerbi.embed($('#reportContainer')[0], config);
 
             })();
         });
